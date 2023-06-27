@@ -1,11 +1,16 @@
 import { NextApiHandler, NextApiRequest, NextApiResponse } from "next";
 import multer from "multer";
 import cloudinary from "@/lib/cloudinary";
-import { CloudinaryStorage } from 'multer-storage-cloudinary'
+import { CloudinaryStorage } from 'multer-storage-cloudinary';
 // import fs from 'fs';
 
+        export const config = {
+            api: {
+                bodyParser: false
+            }
+        }
 
-        interface MulterFile {
+        export interface MulterFile {
             fieldname: string;
             originalname: string;
             encoding: string;
@@ -17,9 +22,9 @@ import { CloudinaryStorage } from 'multer-storage-cloudinary'
             buffer: Buffer;
         }
 
-        interface NextApiRequestWithFile extends NextApiRequest {
+        export interface NextApiRequestWithFile extends NextApiRequest {
             file: MulterFile;
-          }
+        }
 
         // Multer config
         const storage = new CloudinaryStorage({
@@ -33,11 +38,7 @@ import { CloudinaryStorage } from 'multer-storage-cloudinary'
         });
 
         
-        export const config = {
-            api: {
-                bodyParser: false
-            }
-        }
+        
 
         const uploadMiddleware = (req: any, res: any) => {
             return new Promise((resolve, reject) => {
@@ -70,14 +71,6 @@ import { CloudinaryStorage } from 'multer-storage-cloudinary'
         if (!imageFile) {
           return res.status(400).json({ error: 'Dosya yok - file' })
         }
-
-        //Geçici Dosya Silmek için
-        // fs.unlink(imageFile.path, (unlinkErr) => {
-        //   if (unlinkErr) {
-        //     console.error('Geçici dosya silinemedi:', unlinkErr)
-        //   }
-        // });
-      
         res.json({ images: imageFile.path, src: imageFile.filename })
       }
 
