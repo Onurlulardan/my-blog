@@ -1,10 +1,8 @@
 import dbConnect from "@/lib/dbConnect";
-import { readFile } from "@/lib/readFile";
+import { readFile, NextApiRequestWithFiles } from "@/lib/readFile";
 import { postValidationSchema, validateSchema } from "@/lib/validator";
 import { NextApiHandler } from "next";
-import { NextApiRequestWithFiles } from "@/lib/readFile";
 import Post from "@/models/post";
-import cloudinary from "@/lib/cloudinary";
 
 
 export const config = {
@@ -17,16 +15,25 @@ const handler: NextApiHandler = async (req, res) => {
     const { method } = req;
 
     switch (method) {
-        case 'GET': {
-                await dbConnect();
-                res.json({ ok: true });
-            }
-            break;
+        case 'GET': return getPostBySlug(req, res);
         case 'POST': return createNewPost(req, res);
         default:
             break;
     }
 };
+
+const getPostBySlug: NextApiHandler = async (req, res) => {
+    const { slug } = req.query; 
+
+    await dbConnect();
+
+    const post = await Post.findOne({ slug });
+    if (!post) {
+        return res.status(404).json({ error: "Post not found" });
+    }
+
+    res.json({ post });
+}
 
 const createNewPost: NextApiHandler = async (req, res) => {
     const { files, body } = await readFile(req as NextApiRequestWithFiles, res);

@@ -15,6 +15,7 @@ import ActionButton from "../common/ActionButton";
 import ThumbNailSelector from "./thumbnailselector";
 
 export interface FinalPost extends SeoResult {
+    id?: string,
     title: string,
     content: string,
     thumbnail?: File | string 
@@ -136,39 +137,39 @@ const Editor: FC<Props> = ({ initialValue, btnTitle= 'Submit', busy= false, onSu
     }
 
    return <>
-    <div className="p-3  dark:bg-primary-dark bg-primary transition ">
+                <div className="p-3  dark:bg-primary-dark bg-primary transition ">
 
-        <div className="sticky top-0 z-10 dark:bg-primary-dark bg-primary">
-            <div className="flex items-center justify-between mb-3">
-                <ThumbNailSelector initialValue={post.thumbnail as string} onChange={updateThumbnail} />
-                <div className="inline-block">
-                    <ActionButton 
-                        busy={busy}  
-                        title={btnTitle} 
-                        onClick={handleSubmit} 
-                    />
-                </div>
-            </div>
-
-            <input className="bg-transparent w-full border-0 border-b-[1px] border-secondary-dark dark:border-secondary-light text-xl font-semibold italic text-primary-dark dark:text-primary mb-3 py-2 outline-none"  placeholder="Title" onChange={updateTitle} value={post.title}/>
-            <Toolbar editor={editor} onOpenImageModal={() => setShowGallery(true)} />
-            <div className="h-[1px] w-full bg-secondary-dark dark:bg-secondary-light my-3" />
+<div className="sticky top-0 z-10 dark:bg-primary-dark bg-primary">
+    <div className="flex items-center justify-between mb-3">
+        <ThumbNailSelector initialValue={post.thumbnail as string} onChange={updateThumbnail} />
+        <div className="inline-block">
+            <ActionButton 
+                busy={busy}  
+                title={btnTitle} 
+                onClick={handleSubmit} 
+            />
         </div>
-        
-        { editor ? <EditLink editor={editor} /> : null }
-        <EditorContent editor={editor} className="min-h-[300px]" />
-        <div className="h-[1px] w-full bg-secondary-dark dark:bg-secondary-light my-3" />
-        <SeoForm title={post.title} onChange={updateSeoValue} initialValue={seoInitialValue} />
-   </div>
+    </div>
 
-    <GalleryModal 
-        visible={showGallery} 
-        onClose={() => setShowGallery(false)}  
-        onSelect={handleImageSelection} 
-        images={imagesData} 
-        onFileSelect={hendleImageUpload}
-        uploading={uploadingImage}
-    />
+    <input className="bg-transparent w-full border-0 border-b-[1px] border-secondary-dark dark:border-secondary-light text-xl font-semibold italic text-primary-dark dark:text-primary mb-3 py-2 outline-none"  placeholder="Title" onChange={updateTitle} value={post.title}/>
+    <Toolbar editor={editor} onOpenImageModal={() => setShowGallery(true)} />
+    <div className="h-[1px] w-full bg-secondary-dark dark:bg-secondary-light my-3" />
+</div>
+
+{ editor ? <EditLink editor={editor} /> : null }
+<EditorContent editor={editor} className="min-h-[300px]" />
+<div className="h-[1px] w-full bg-secondary-dark dark:bg-secondary-light my-3" />
+<SeoForm title={post.title} onChange={updateSeoValue} initialValue={seoInitialValue} />
+</div>
+
+<GalleryModal 
+visible={showGallery} 
+onClose={() => setShowGallery(false)}  
+onSelect={handleImageSelection} 
+images={imagesData} 
+onFileSelect={hendleImageUpload}
+uploading={uploadingImage}
+/>
    </>
 };
 

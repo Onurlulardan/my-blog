@@ -17,7 +17,7 @@ const ThumbNailSelector: FC<Props> = ({ initialValue, onChange }): JSX.Element =
         if (!files) return
 
         const file = files[0]
-        setSelectedThumbNail(URL.createObjectURL(file));
+        setSelectedThumbNail(URL?.createObjectURL(file));
         onChange(file);
     }
 
