@@ -3,18 +3,18 @@ import { NextPage } from "next";
 import Editor, { FinalPost } from "@/components/editor";
 import AdminLayOut from "@/components/layout/adminLayout";
 import { useEffect, useState } from "react";
-import useSWR from 'swr'; 
+import useSWR from "swr";
 import { generateFormData } from "@/utils/helper";
 import axios from "axios";
 
 interface UpdatedPost {
-  id: string,
-  slug: string,
-  post: FinalPost,
+  id: string;
+  slug: string;
+  post: FinalPost;
 }
 
 interface Props {
-  params: UpdatedPost,
+  params: UpdatedPost;
 }
 
 const fetcher = async (url: string) => {
@@ -22,21 +22,20 @@ const fetcher = async (url: string) => {
   return response.data;
 };
 
-const Update: NextPage<Props> =  ({ params }) => {
-  const  slug  = params.slug;
+const Update: NextPage<Props> = ({ params }) => {
+  const slug = params.slug;
 
   const [updatedPost, setUpdatedPost] = useState({
-      id: "",
-      title: "",
-      content: "",
-      thumbnail: "",
-      tags: "",
-      meta: "",
-      slug: "",
+    id: "",
+    title: "",
+    content: "",
+    thumbnail: "",
+    tags: "",
+    meta: "",
+    slug: "",
   });
 
-  const { data, error } = useSWR(`/api/posts?slug=${slug}`, fetcher); 
-
+  const { data, error } = useSWR(`/api/posts?slug=${slug}`, fetcher);
 
   useEffect(() => {
     if (data?.post) {
@@ -46,31 +45,35 @@ const Update: NextPage<Props> =  ({ params }) => {
         title,
         content,
         tags: tags.join(","),
-        thumbnail: thumbnail?.url || '',
+        thumbnail: thumbnail?.url || "",
         slug: slug as any,
-        meta
+        meta,
       });
     }
   }, [data]);
 
   const handleSubmit = async (post: FinalPost) => {
     try {
-        const formdata = generateFormData(post);
+      const formdata = generateFormData(post);
 
-        const { data } = await axios.patch('/api/posts/' + post.id, formdata);
-        console.log(data);
+      const { data } = await axios.patch("/api/posts/" + post.id, formdata);
+      console.log(data);
     } catch (error: any) {
-        console.log(error.response.data);
+      console.log(error.response.data);
     }
-}
+  };
 
-  if (error) return <div>Failed to load post</div>
-  if (!data) return <div>Loading...</div>
+  if (error) return <div>Failed to load post</div>;
+  if (!data) return <div>Loading...</div>;
 
   return (
     <AdminLayOut title="Update">
       <div className="max-w-4xl mx-auto">
-        <Editor initialValue={updatedPost} onSubmit={(post) => handleSubmit(post)} btnTitle="Update" />
+        <Editor
+          initialValue={updatedPost}
+          onSubmit={(post) => handleSubmit(post)}
+          btnTitle="Update"
+        />
       </div>
     </AdminLayOut>
   );
