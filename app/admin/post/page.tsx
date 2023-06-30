@@ -1,14 +1,13 @@
 "use client";
+import InfinityScrollPosts from "@/components/common/infinitescrollpost";
 import { NextPage } from "next";
 import AdminLayOut from "@/components/layout/adminLayout";
-import PostCard from "@/components/common/postcard";
 import useSWR from "swr";
 import axios from "axios";
 import { PostDetails } from "@/utils/types";
+import { useState, useEffect, useCallback } from "react";
 
-interface Props {
-  post: PostDetails;
-}
+interface Props {}
 
 const fetcher = async (url: string) => {
   const response = await axios.get(url);
@@ -16,6 +15,7 @@ const fetcher = async (url: string) => {
 };
 
 const Post: NextPage<Props> = () => {
+  const [hasMorePost, setHasMorePost] = useState(true);
   let pageNumber = 0;
   const limit = 9;
 
@@ -23,29 +23,47 @@ const Post: NextPage<Props> = () => {
     `/api/posts?limit=${limit}&pageNumber=${pageNumber}`,
     fetcher
   );
-  let post: PostDetails[] = data?.posts;
+
+  const [post, setPost] = useState<PostDetails[]>([]);
+
+  useEffect(() => {
+    if (data?.posts) {
+      setPost(data.posts);
+    }
+  }, [data]);
+
+  const fetchMorePost = useCallback(async () => {
+    try {
+      pageNumber++;
+      console.log("pageNumber =>", pageNumber);
+      const { data } = await axios(
+        `/api/posts?limit=${limit}&pageNumber=${pageNumber}`
+      );
+      if (data.posts.length < limit) {
+        setPost((oldPosts) => [...oldPosts, ...data.posts]);
+        console.log("post =>", post);
+        setHasMorePost(false);
+      } else {
+        setPost((oldPosts) => [...oldPosts, ...data.posts]);
+      }
+    } catch (error) {
+      setHasMorePost(false);
+      console.log(error);
+    }
+  }, [pageNumber, post]);
 
   if (error) return <div>Failed to load post</div>;
   if (!data) return <div>Loading...</div>;
 
-  console.log(post);
-
   return (
     <AdminLayOut>
-      <div className="max-w-4xl mx-auto p-3">
-        <div className="grid grid-cols-3 gap-4">
-          {post &&
-            post.map((postItem) => {
-              return (
-                <PostCard
-                  key={postItem.slug}
-                  post={postItem}
-                  onDeleteClick={() => {}}
-                />
-              );
-            })}
-        </div>
-      </div>
+      <InfinityScrollPosts
+        hasMore={hasMorePost}
+        next={fetchMorePost}
+        dataLength={post.length}
+        post={post}
+        showControls
+      />
     </AdminLayOut>
   );
 };
