@@ -15,7 +15,13 @@ const handler: NextApiHandler = async (req, res) => {
     const { method } = req;
 
     switch (method) {
-        case 'GET': return getPostBySlug(req, res);
+        case 'GET': 
+            if (req.query.slug) {
+                return getPostBySlug(req, res);
+            }
+            else {
+                return getAllPost(req, res);
+            }
         case 'POST': return createNewPost(req, res);
         default:
             break;
@@ -33,6 +39,18 @@ const getPostBySlug: NextApiHandler = async (req, res) => {
     }
 
     res.json({ post });
+}
+
+const getAllPost: NextApiHandler = async (req, res) => {
+    const limit = Number(req.query.limit as string) || 10;
+    const pageNumber = Number(req.query.pageNumber as string) || 0;
+
+    const skip = limit * pageNumber;
+    await dbConnect();
+
+    const posts = await Post.find().sort({ createdAt: "desc" }).select('-content').skip(skip).limit(limit);
+
+    res.json({ posts });
 }
 
 const createNewPost: NextApiHandler = async (req, res) => {

@@ -1,6 +1,6 @@
 import { Schema, model, models, ObjectId, Model } from "mongoose";
 
-interface IPostModelSchema {
+export interface IPostModelSchema {
     title: string,
     slug: string,
     content: string,
