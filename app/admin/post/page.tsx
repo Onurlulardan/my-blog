@@ -35,13 +35,11 @@ const Post: NextPage<Props> = () => {
   const fetchMorePost = useCallback(async () => {
     try {
       pageNumber++;
-      console.log("pageNumber =>", pageNumber);
       const { data } = await axios(
         `/api/posts?limit=${limit}&pageNumber=${pageNumber}`
       );
       if (data.posts.length < limit) {
         setPost((oldPosts) => [...oldPosts, ...data.posts]);
-        console.log("post =>", post);
         setHasMorePost(false);
       } else {
         setPost((oldPosts) => [...oldPosts, ...data.posts]);

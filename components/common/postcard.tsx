@@ -76,7 +76,6 @@ const PostCard: FC<Props> = ({
               </button>
             </>
           )}
-          L
         </div>
       )}
     </div>
