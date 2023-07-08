@@ -6,6 +6,7 @@ import useSWR from "swr";
 import axios from "axios";
 import { PostDetails } from "@/utils/types";
 import { useState, useEffect, useCallback } from "react";
+import ConfirmModal from "@/components/common/confirmModal";
 
 interface Props {}
 
@@ -54,15 +55,23 @@ const Post: NextPage<Props> = () => {
   if (!data) return <div>Loading...</div>;
 
   return (
-    <AdminLayOut>
-      <InfinityScrollPosts
-        hasMore={hasMorePost}
-        next={fetchMorePost}
-        dataLength={post.length}
-        post={post}
-        showControls
-      />
-    </AdminLayOut>
+    <>
+      <AdminLayOut>
+        <InfinityScrollPosts
+          hasMore={hasMorePost}
+          next={fetchMorePost}
+          dataLength={post.length}
+          post={post}
+          showControls
+        />
+        <ConfirmModal
+          visible
+          title="Are You Sure?"
+          subTitle="This action will remove this post permanently!"
+          busy
+        />
+      </AdminLayOut>
+    </>
   );
 };
 
