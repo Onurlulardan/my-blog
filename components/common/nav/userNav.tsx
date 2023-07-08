@@ -1,3 +1,4 @@
+"use client";
 import Link from "next/link";
 import React, { FC } from "react";
 import Logo from "../Logo";
@@ -6,14 +7,43 @@ import { HiLightBulb } from "react-icons/hi";
 import { GithubAuthButton } from "@/components/button";
 import ProfileHead from "../profileHead";
 import DropdownOptions, { dropdownOptions } from "../DropdownOptions";
+import { useSession, signIn, signOut } from "next-auth/react";
+import { useRouter } from "next/navigation";
+import { UserProfile } from "@/utils/types";
 
 interface Props {}
 
+const defaultOptions: dropdownOptions = [
+  {
+    label: "Logout",
+    async onClick() {
+      await signOut();
+    },
+  },
+];
+
 const UserNav: FC<Props> = (): JSX.Element => {
-  const dropDownoptions: dropdownOptions = [
-    { label: "Dashboard", onClick() {} },
-    { label: "Logout", onClick() {} },
-  ];
+  const router = useRouter();
+  const { data, status } = useSession();
+  const isAuth = status === "authenticated";
+  const profile = data?.user as UserProfile | undefined;
+  const isAdmin = profile && profile.role === "admin";
+
+  const dropDownoptions: dropdownOptions = isAdmin
+    ? [
+        {
+          label: "Dashboard",
+          onClick() {
+            router.push("/admin");
+          },
+        },
+        ...defaultOptions,
+      ]
+    : defaultOptions;
+
+  const handleLogin = async () => {
+    await signIn("github");
+  };
 
   return (
     <div className="flex items-center justify-between bg-primary-dark p-3">
@@ -26,11 +56,14 @@ const UserNav: FC<Props> = (): JSX.Element => {
         <button className="dark:text-secondary-dark text-secondary-light">
           <HiLightBulb size={34} />
         </button>
-        <GithubAuthButton lightOnly />
-        <DropdownOptions
-          options={dropDownoptions}
-          head={<ProfileHead NameInitial="O" lightOnly />}
-        />
+        {isAuth ? (
+          <DropdownOptions
+            options={dropDownoptions}
+            head={<ProfileHead NameInitial="O" lightOnly />}
+          />
+        ) : (
+          <GithubAuthButton onClick={handleLogin} lightOnly />
+        )}
       </div>
     </div>
   );
