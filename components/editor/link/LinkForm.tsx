@@ -38,7 +38,7 @@ const LinkForm: FC<Props> = ({ visible, initialState, onSubmit }): JSX.Element |
 
       <div className="flex items-center space-x-2 mt-2">
         <input type="checkbox" id="open-in-new-tab" checked={link.openInNewTab} onChange={({target}) => { setLink({...link, openInNewTab: target.checked}) }} />
-        <label htmlFor="open-in-new-tab">Open in new tab</label>
+        <label className="text-secondary-dark dark:text-secondary-light" htmlFor="open-in-new-tab">Open in new tab</label>
 
         <div className="flex-1 text-right">
           <button onClick={() => {handleSubmit()}} className="bg-action px-2 py-1 text-primary rounded text-sm">Apply</button>
