@@ -4,6 +4,7 @@ import ProfileHead from "../profileHead";
 import { useRouter } from "next/navigation";
 import useDarkMode from "@/hooks/useDarkMode";
 import { signOut } from "next-auth/react";
+import SearchBar from "../searchBar";
 
 interface Props {}
 
@@ -32,7 +33,7 @@ const SecondaryAdminNav: FC<Props> = (): JSX.Element => {
   ];
   return (
     <div className="flex items-center justify-between">
-      <input type="text" />
+      <SearchBar />
       <DropdownOptions head={<ProfileHead NameInitial="J" />} options={options} />
     </div>
   );
