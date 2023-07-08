@@ -28,16 +28,20 @@ const handler: NextApiHandler = async (req, res) => {
 };
 
 const getPostBySlug: NextApiHandler = async (req, res) => {
-  const { slug } = req.query;
+  try {
+    const { slug } = req.query;
 
-  await dbConnect();
+    await dbConnect();
+    const post = await Post.findOne({ slug });
+    if (!post) {
+      return res.status(404).json({ error: "Post not found" });
+    }
 
-  const post = await Post.findOne({ slug });
-  if (!post) {
-    return res.status(404).json({ error: "Post not found" });
+    res.json({ post });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Internal Server Error" });
   }
-
-  res.json({ post });
 };
 
 const getAllPost: NextApiHandler = async (req, res) => {

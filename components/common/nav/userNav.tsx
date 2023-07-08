@@ -10,6 +10,7 @@ import DropdownOptions, { dropdownOptions } from "../DropdownOptions";
 import { useSession, signIn, signOut } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { UserProfile } from "@/utils/types";
+import useDarkMode from "@/hooks/useDarkMode";
 
 interface Props {}
 
@@ -45,6 +46,8 @@ const UserNav: FC<Props> = (): JSX.Element => {
     await signIn("github");
   };
 
+  const { toggleTheme } = useDarkMode();
+
   return (
     <div className="flex items-center justify-between bg-primary-dark p-3">
       <Link href={"/"} className="flex space-x-2 text-highlight-dark ">
@@ -53,7 +56,10 @@ const UserNav: FC<Props> = (): JSX.Element => {
       </Link>
 
       <div className="flex items-center space-x-5">
-        <button className="dark:text-secondary-dark text-secondary-light">
+        <button
+          onClick={toggleTheme}
+          className="dark:text-secondary-dark text-secondary-light"
+        >
           <HiLightBulb size={34} />
         </button>
         {isAuth ? (

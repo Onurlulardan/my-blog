@@ -5,15 +5,15 @@ import { BubbleMenu, Editor } from "@tiptap/react";
 import LinkForm, { LinkOptions } from "./LinkForm";
 
 interface Props {
-  editor: Editor
+  editor: Editor;
 }
 
 const EditLink: FC<Props> = ({ editor }): JSX.Element => {
   const [showEditForm, setShowEditForm] = useState(false);
   const handleOnLinkOpenClick = useCallback(() => {
-    const { href } = editor.getAttributes('link');
+    const { href } = editor.getAttributes("link");
     if (href) {
-      window.open(href, '_blank');
+      window.open(href, "_blank");
     }
   }, [editor]);
 
@@ -23,34 +23,51 @@ const EditLink: FC<Props> = ({ editor }): JSX.Element => {
     editor.commands.unsetLink();
   };
 
-  const handleSubmit = ({url, openInNewTab}: LinkOptions) => {
-    editor.chain().focus().unsetLink().setLink({ href: url, target: openInNewTab ? "_blank" : "" }).run();
+  const handleSubmit = ({ url, openInNewTab }: LinkOptions) => {
+    editor
+      .chain()
+      .focus()
+      .unsetLink()
+      .setLink({ href: url, target: openInNewTab ? "_blank" : "" })
+      .run();
     setShowEditForm(false);
-  }
+  };
 
   const getInitialState = useCallback(() => {
-    const { href, target } = editor.getAttributes('link');
-    return { url: href, openInNewTab: target ? true : false }
+    const { href, target } = editor.getAttributes("link");
+    return { url: href, openInNewTab: target ? true : false };
   }, [editor]);
 
   return (
-    <BubbleMenu shouldShow={({editor}) =>  editor.isActive('link')} editor={editor} tippyOptions={{ onHide: () => setShowEditForm(false) }}>
+    <BubbleMenu
+      shouldShow={({ editor }) => editor.isActive("link")}
+      editor={editor}
+      tippyOptions={{
+        onHide: () => setShowEditForm(false),
+        appendTo: "parent",
+      }}
+    >
+      <LinkForm
+        visible={showEditForm}
+        onSubmit={handleSubmit}
+        initialState={getInitialState()}
+      />
 
-      <LinkForm visible={showEditForm} onSubmit={handleSubmit} initialState={getInitialState()} />
+      {!showEditForm && (
+        <div className="rounded bg-primary dark:bg-primary-dark text-primary-dark dark:text-primary shadow-secondary-dark shadow-md p-3 flex items-center space-x-6 z-50">
+          <button onClick={handleOnLinkOpenClick}>
+            <BsBoxArrowUpRight />
+          </button>
 
-      { !showEditForm && <div className="rounded bg-primary dark:bg-primary-dark text-primary-dark dark:text-primary shadow-secondary-dark shadow-md p-3 flex items-center space-x-6 z-50">
-        <button onClick={handleOnLinkOpenClick}>
-          <BsBoxArrowUpRight />
-        </button>
+          <button onClick={handleLinkEditClick}>
+            <BsPencilSquare />
+          </button>
 
-        <button onClick={handleLinkEditClick}>
-          <BsPencilSquare />
-        </button>
-
-        <button onClick={handleUnlinkClick}>
-          <BiUnlink />
-        </button>
-      </div> }
+          <button onClick={handleUnlinkClick}>
+            <BiUnlink />
+          </button>
+        </div>
+      )}
     </BubbleMenu>
   );
 };

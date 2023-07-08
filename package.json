@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@tippyjs/react": "^4.2.6",
     "@tiptap/extension-image": "^2.0.3",
     "@tiptap/extension-link": "^2.0.3",
     "@tiptap/extension-placeholder": "^2.0.3",
@@ -30,6 +31,7 @@
     "eslint": "8.43.0",
     "eslint-config-next": "13.4.7",
     "formidable": "^3.4.0",
+    "html-react-parser": "^4.0.0",
     "joi": "^17.9.2",
     "mongodb-client-encryption": "^2.8.0",
     "mongoose": "^7.3.1",
