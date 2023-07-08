@@ -1,10 +1,12 @@
 import { FC, ReactNode, useState } from "react";
 
+export type dropdownOptions = { 
+  label: string; 
+  onClick(): void 
+}[];
+
 interface Props {
-  options: { 
-    label: string; 
-    onClick(): void 
-  }[];
+  options: dropdownOptions;
   head: ReactNode;
 }
 
