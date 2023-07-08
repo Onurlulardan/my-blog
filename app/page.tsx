@@ -3,10 +3,10 @@ import { NextPage } from "next";
 import DefaultLayout from "@/components/layout/defaultLayout";
 import { useState, useEffect, useCallback } from "react";
 import axios from "axios";
-import { PostDetails } from "@/utils/types";
+import { PostDetails, UserProfile } from "@/utils/types";
 import useSWR from "swr";
 import InfinityScrollPosts from "@/components/common/infinitescrollpost";
-
+import { useSession } from "next-auth/react";
 
 interface Props {}
 
@@ -19,7 +19,9 @@ const Home: NextPage = () => {
   const [hasMorePost, setHasMorePost] = useState(true);
   let pageNumber = 0;
   const limit = 9;
-  const isAdmin = false;
+  const session = useSession();
+  const profile = session.data?.user as UserProfile;
+  const isAdmin = profile && profile.role === "admin";
 
   const { data, error } = useSWR(
     `/api/posts?limit=${limit}&pageNumber=${pageNumber}`,
@@ -55,17 +57,19 @@ const Home: NextPage = () => {
   if (error) return <div>Failed to load post</div>;
   if (!data) return <div>Loading...</div>;
 
-  return <DefaultLayout>
-    <div className="p-20">
-      <InfinityScrollPosts
-        hasMore={hasMorePost}
-        next={fetchMorePost}
-        dataLength={post.length}
-        post={post}
-        showControls={isAdmin}
-      />
-    </div>
-  </DefaultLayout>;
+  return (
+    <DefaultLayout>
+      <div className="p-20">
+        <InfinityScrollPosts
+          hasMore={hasMorePost}
+          next={fetchMorePost}
+          dataLength={post.length}
+          post={post}
+          showControls={isAdmin}
+        />
+      </div>
+    </DefaultLayout>
+  );
 };
 
 export default Home;
