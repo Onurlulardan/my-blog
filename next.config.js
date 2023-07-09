@@ -4,7 +4,7 @@ const nextConfig = {
         serverActions: true,
       },
       images: {
-        domains: ["images.unsplash.com", "res.cloudinary.com"],
+        domains: ["images.unsplash.com", "res.cloudinary.com", "https://www.altuntasonur.dev"],
       },
       webpack: (config, { isServer }) => {
         // Sadece sunucu tarafında çalışacaksa (isServer=true), kritik bağımlılık hatasını önle
