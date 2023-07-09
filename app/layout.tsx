@@ -1,12 +1,12 @@
 "use client";
-import './globals.css';
-import { Inter } from 'next/font/google';
+import "./globals.css";
+import { Inter } from "next/font/google";
 import { SessionProvider } from "next-auth/react";
 import { Session } from "next-auth";
-import DefaultLayout from '@/components/layout/defaultLayout';
+// import Router from "next/router";
+// import nprogress from "nprogress";
 
-const inter = Inter({ subsets: ['latin'] })
-
+const inter = Inter({ subsets: ["latin"] });
 
 interface RootLayoutProps {
   children: React.ReactNode;
@@ -16,14 +16,21 @@ interface RootLayoutProps {
   };
 }
 
-export default function RootLayout({ children, params: { session, ...params } }: RootLayoutProps) {
+// App router'a router events geldiği zaman aktif edilecek
+// nprogress.configure({ showSpinner: false });
+// Router.events.on("routeChangeStart", () => nprogress.start());
+// Router.events.on("routeChangeComplete", () => nprogress.done());
+// Router.events.on("routeChangeError", () => nprogress.done());
+
+export default function RootLayout({
+  children,
+  params: { session, ...params },
+}: RootLayoutProps) {
   return (
     <html lang="en">
       <body className={inter.className}>
-          <SessionProvider session={session}>
-            {children}
-          </SessionProvider>
-        </body>
+        <SessionProvider session={session}>{children}</SessionProvider>
+      </body>
     </html>
-  )
+  );
 }

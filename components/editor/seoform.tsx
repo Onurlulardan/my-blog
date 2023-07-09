@@ -43,7 +43,7 @@ const SeoForm: FC<Props> = ({
     const newValues = { ...values, slug };
     setValues(newValues);
     onChange(newValues);
-  }, [title, onChange]);
+  }, [title]);
 
   useEffect(() => {
     if (initialValue) {

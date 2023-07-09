@@ -7,7 +7,7 @@ import { generateFormData } from "@/utils/helper";
 
 interface Props {}
 
-const Create: NextPage<Props> = async () => {
+const Create: NextPage<Props> = () => {
   const handlePostSubmit = async (post: FinalPost) => {
     try {
       const formdata = generateFormData(post);
