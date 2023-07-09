@@ -1,5 +1,8 @@
 import { FinalPost } from "@/components/editor";
-import { PostDetails } from "./types";
+import { PostDetails, UserProfile } from "./types";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/pages/api/auth/[...nextauth]";
+import { NextApiRequest, NextApiResponse } from "next";
 
 export const generateFormData = (post: FinalPost) => {
   const formdata = new FormData();
@@ -23,3 +26,10 @@ export const filterPosts = (post: PostDetails[], postToFilter: PostDetails) => {
     return post._id !== postToFilter._id;
   });
 };
+
+
+export const isAdmin = async (req: NextApiRequest, res: NextApiResponse) => {
+  const session = await getServerSession(req, res, authOptions);
+  const user = session?.user as UserProfile;
+  return user && user.role === "admin"
+}

@@ -4,6 +4,7 @@ import { postValidationSchema, validateSchema } from "@/lib/validator";
 import { NextApiHandler } from "next";
 import Post from "@/models/post";
 import { readPostFromDb } from "@/lib/utils";
+import { isAdmin } from "@/utils/helper";
 
 export const config = {
   api: {
@@ -50,21 +51,17 @@ const getAllPost: NextApiHandler = async (req, res) => {
   const pageNumber = Number(req.query.pageNumber as string) || 0;
   const skip = Number(req.query.skip as string);
 
-  // const skip = limit * pageNumber;
   await dbConnect();
 
   const posts = await readPostFromDb(limit, pageNumber, skip);
-
-  // const posts = await Post.find()
-  //   .sort({ createdAt: "desc" })
-  //   .select("-content")
-  //   .skip(skip)
-  //   .limit(limit);
 
   res.json({ posts });
 };
 
 const createNewPost: NextApiHandler = async (req, res) => {
+  const admin = await isAdmin(req, res);
+  if (!admin) return res.status(401).json({ error: "Unauthorized request!" });
+
   const { files, body } = await readFile(req as NextApiRequestWithFiles, res);
 
   let tags = [];

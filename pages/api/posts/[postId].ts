@@ -3,6 +3,7 @@ import { NextApiHandler } from "next";
 import { readFile, NextApiRequestWithFiles } from "@/lib/readFile";
 import { postValidationSchema, validateSchema } from "@/lib/validator";
 import cloudinary from "@/lib/cloudinary";
+import { isAdmin } from "@/utils/helper";
 
 export const config = {
   api: {
@@ -25,6 +26,8 @@ const handler: NextApiHandler = (req, res) => {
 
 const removePost: NextApiHandler = async (req, res) => {
   try {
+    const admin = await isAdmin(req, res);
+    if (!admin) return res.status(401).json({ error: "Unauthorized request!" });
     const { postId } = req.query;
     const post = await Post.findByIdAndDelete(postId);
     if (!post) return res.status(404).json({ error: "Post Not Found!" });
@@ -40,6 +43,8 @@ const removePost: NextApiHandler = async (req, res) => {
 };
 
 const updatePost: NextApiHandler = async (req, res) => {
+  const admin = await isAdmin(req, res);
+  if (!admin) return res.status(401).json({ error: "Unauthorized request!" });
   const { postId } = req.query;
 
   const post = await Post.findById(postId);
