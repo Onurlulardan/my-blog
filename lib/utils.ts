@@ -2,13 +2,17 @@ import Post, { IPostModelSchema } from "@/models/post";
 import dbConnect from "./dbConnect";
 import { PostDetails } from "@/utils/types";
 
-export const readPostFromDb = async (limit: number, pageNumber: number) => {
-  const skip = limit * pageNumber;
+export const readPostFromDb = async (
+  limit: number,
+  pageNumber: number,
+  skip?: number
+) => {
+  const finalSkip = skip || limit * pageNumber;
   await dbConnect();
   const posts = await Post.find()
     .sort({ createdAt: "desc" })
     .select("-content")
-    .skip(skip)
+    .skip(finalSkip)
     .limit(limit);
   return posts;
 };

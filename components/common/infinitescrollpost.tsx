@@ -75,6 +75,7 @@ const InfinityScrollPosts: FC<Props> = ({
                       handleOnDeleteClick(postItem as any);
                     }}
                     controls={showControls}
+                    busy={postItem._id === postToRemove?._id && removing}
                   />
                 );
               })}

@@ -41,7 +41,7 @@ const Home: NextPage = () => {
     try {
       pageNumber++;
       const { data } = await axios(
-        `/api/posts?limit=${limit}&pageNumber=${pageNumber}`
+        `/api/posts?limit=${limit}&skip=${post.length}`
       );
       if (data.posts.length < limit) {
         setPost((oldPosts) => [...oldPosts, ...data.posts]);

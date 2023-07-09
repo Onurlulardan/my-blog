@@ -16,7 +16,6 @@ const fetcher = async (url: string) => {
 };
 
 const Post: NextPage<Props> = () => {
-  const [hasMorePost, setHasMorePost] = useState(true);
   let pageNumber = 0;
   const limit = 9;
 
@@ -26,6 +25,8 @@ const Post: NextPage<Props> = () => {
   );
 
   const [post, setPost] = useState<PostDetails[]>([]);
+  const [hasMorePost, setHasMorePost] = useState(post.length >= limit);
+
 
   useEffect(() => {
     if (data?.posts) {
@@ -37,7 +38,7 @@ const Post: NextPage<Props> = () => {
     try {
       pageNumber++;
       const { data } = await axios(
-        `/api/posts?limit=${limit}&pageNumber=${pageNumber}`
+        `/api/posts?limit=${limit}&skip=${post.length}`
       );
       if (data.posts.length < limit) {
         setPost((oldPosts) => [...oldPosts, ...data.posts]);
