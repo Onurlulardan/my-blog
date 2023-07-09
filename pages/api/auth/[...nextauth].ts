@@ -3,11 +3,24 @@ import User from "@/models/user";
 import NextAuth, { NextAuthOptions } from "next-auth";
 import GithubProvider from "next-auth/providers/github";
 
+const {
+  GITHUB_CLIENT_ID,
+  GITHUB_CLIENT_SECRET,
+  GITHUB_CLIENT_ID_LOCAL,
+  GITHUB_CLIENT_SECRET_LOCAL,
+  MODE,
+} = process.env;
+
+const GIT_ID =
+  MODE === "development" ? GITHUB_CLIENT_ID_LOCAL : GITHUB_CLIENT_ID;
+const GIT_SECRET =
+  MODE === "development" ? GITHUB_CLIENT_SECRET_LOCAL : GITHUB_CLIENT_SECRET;
+
 export const authOptions: NextAuthOptions = {
   providers: [
     GithubProvider({
-      clientId: process.env.GITHUB_CLIENT_ID as string,
-      clientSecret: process.env.GITHUB_CLIENT_SECRET as string,
+      clientId: GIT_ID as string,
+      clientSecret: GIT_SECRET as string,
       async profile(profile, tokens) {
         await dbConnect();
         const oldUser = await User.findOne({ email: profile.email });

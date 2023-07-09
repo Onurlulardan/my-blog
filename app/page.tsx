@@ -8,6 +8,7 @@ import useSWR from "swr";
 import InfinityScrollPosts from "@/components/common/infinitescrollpost";
 import { useSession } from "next-auth/react";
 import { filterPosts } from "@/utils/helper";
+import { useAuth } from "@/hooks/useAuth";
 
 interface Props {}
 
@@ -19,8 +20,7 @@ const fetcher = async (url: string) => {
 const Home: NextPage = () => {
   let pageNumber = 0;
   const limit = 9;
-  const session = useSession();
-  const profile = session.data?.user as UserProfile;
+  const profile = useAuth();
   const isAdmin = profile && profile.role === "admin";
 
   const { data, error } = useSWR(
