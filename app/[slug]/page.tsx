@@ -56,4 +56,4 @@ const SinglePost = async ({ params }: { params: { slug: string } }) => {
 
 export default SinglePost;
 
-SinglePost.revalidate = 10;
+SinglePost.revalidate = 60;
