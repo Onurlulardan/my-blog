@@ -27,9 +27,14 @@ export const filterPosts = (post: PostDetails[], postToFilter: PostDetails) => {
   });
 };
 
-
 export const isAdmin = async (req: NextApiRequest, res: NextApiResponse) => {
   const session = await getServerSession(req, res, authOptions);
   const user = session?.user as UserProfile;
-  return user && user.role === "admin"
-}
+  return user && user.role === "admin";
+};
+
+export const isAuth = async (req: NextApiRequest, res: NextApiResponse) => {
+  const session = await getServerSession(req, res, authOptions);
+  const user = session?.user;
+  if (user) return user as UserProfile;
+};
