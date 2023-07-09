@@ -1,3 +1,4 @@
+"use client";
 import { GithubAuthButton } from "@/components/button";
 import { NextPage } from "next";
 import { signIn } from "next-auth/react";
