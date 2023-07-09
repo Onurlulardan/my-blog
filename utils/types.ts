@@ -1,6 +1,7 @@
 type Thumbnail = string | { url: string; public_id: string };
 
 export interface PostDetails {
+  _id: string;
   createdAt: string;
   meta: string;
   slug: string;

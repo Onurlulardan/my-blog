@@ -6,7 +6,7 @@ import useSWR from "swr";
 import axios from "axios";
 import { PostDetails } from "@/utils/types";
 import { useState, useEffect, useCallback } from "react";
-import ConfirmModal from "@/components/common/confirmModal";
+import { filterPosts } from "@/utils/helper";
 
 interface Props {}
 
@@ -63,12 +63,7 @@ const Post: NextPage<Props> = () => {
           dataLength={post.length}
           post={post}
           showControls
-        />
-        <ConfirmModal
-          visible
-          title="Are You Sure?"
-          subTitle="This action will remove this post permanently!"
-          busy
+          onPostRemoved={(posts) => setPost(filterPosts(post, posts as any))}
         />
       </AdminLayOut>
     </>

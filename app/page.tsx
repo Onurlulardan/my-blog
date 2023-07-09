@@ -7,6 +7,7 @@ import { PostDetails, UserProfile } from "@/utils/types";
 import useSWR from "swr";
 import InfinityScrollPosts from "@/components/common/infinitescrollpost";
 import { useSession } from "next-auth/react";
+import { filterPosts } from "@/utils/helper";
 
 interface Props {}
 
@@ -66,6 +67,7 @@ const Home: NextPage = () => {
           dataLength={post.length}
           post={post}
           showControls={isAdmin}
+          onPostRemoved={(posts) => setPost(filterPosts(post, posts as any))}
         />
       </div>
     </DefaultLayout>

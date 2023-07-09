@@ -29,7 +29,7 @@ const removePost: NextApiHandler = async (req, res) => {
     const post = await Post.findByIdAndDelete(postId);
     if (!post) return res.status(404).json({ error: "Post Not Found!" });
 
-    const publicId = post.thumbnail.public_id;
+    const publicId = post?.thumbnail?.public_id;
     if (publicId) {
       await cloudinary.uploader.destroy(publicId);
     }
