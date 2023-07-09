@@ -17,7 +17,7 @@ const NotFound = () => (
           </div>
 
           <div className="mt-8">
-            <h3 className="text-4xl">Looks like you're lost</h3>
+            <h3 className="text-4xl">Looks like you&#39;re lost</h3>
 
             <p>The page you are looking for is not available!</p>
 
