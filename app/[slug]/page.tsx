@@ -1,12 +1,17 @@
+"use client";
 import DefaultLayout from "@/components/layout/defaultLayout";
-import { notFound } from "next/navigation";
-import Post from "@/models/post";
-import dbConnect from "@/lib/dbConnect";
 import parse from "html-react-parser";
 import Image from "next/image";
 import dateFormat from "dateformat";
+import { useAuth } from "@/hooks/useAuth";
+import CommentForm from "@/components/common/commentform";
+import { GithubAuthButton } from "@/components/button";
+import useSWR from "swr";
+import axios from "axios";
+import { NextPage } from "next";
+import { useEffect, useState } from "react";
 
-interface Props {
+interface finalProps {
   id: string;
   title: string;
   content: string;
@@ -17,37 +22,71 @@ interface Props {
   createdAt: string;
 }
 
-const getPostBySlug = async (slug: string) => {
-  await dbConnect();
-  const post = await Post.findOne({ slug });
-  if (!post) return notFound();
-  return post;
+interface UpdatedPost {
+  id: string;
+  slug: string;
+  post: finalProps;
+}
+
+interface Props {
+  params: UpdatedPost;
+}
+
+const fetcher = async (url: string) => {
+  const response = await axios.get(url);
+  return response.data;
 };
 
-const SinglePost = async ({ params }: { params: { slug: string } }) => {
-  const post = await getPostBySlug(params.slug);
-  const { _id, title, meta, thumbnail, slug, tags, createdAt, content } = post;
+const SinglePost: NextPage<Props> = ({ params }) => {
+  const paramsSlug = params.slug;
+  const profile = useAuth();
+
+  const { data, error } = useSWR(`/api/posts?slug=${paramsSlug}`, fetcher);
+
+  const [post, setPost] = useState<finalProps>();
+
+  useEffect(() => {
+    if (data?.post) {
+      setPost(data.post);
+    }
+  }, [data]);
+
+  if (error) return <div>Failed to load post</div>;
+  if (!data) return <div>Loading...</div>;
 
   return (
-    <DefaultLayout title={title} desc={meta}>
-      <div className="pb-20">
-        {thumbnail ? (
+    <DefaultLayout title={post?.title} desc={post?.meta}>
+      <div>
+        {post?.thumbnail ? (
           <div className="relative aspect-video">
-            <Image src={thumbnail.url} fill alt={title} />
+            <Image src={post?.thumbnail} fill alt={post?.title} />
           </div>
         ) : null}
         <h1 className="text-6xl font-semibold text-primary-dark dark:text-primary py-2">
           {" "}
-          {title}{" "}
+          {post?.title}{" "}
         </h1>
         <div className="flex items-center justify-between py-2 text-secondary-dark dark:text-secondary-light">
-          {tags.map((t, index) => (
+          {post?.tags.map((t, index) => (
             <span key={index}> {t} </span>
           ))}
-          <span> {dateFormat(createdAt, "d-mmm-yyyy")} </span>
+          <span> {dateFormat(post?.createdAt, "d-mmm-yyyy")} </span>
         </div>
         <div className="prose prose-lg dark:prose-invert max-w-full mx-auto">
-          {parse(content)}
+          {parse(post?.content ? post.content : "")}
+        </div>
+
+        <div className="py-20">
+          {profile ? (
+            <CommentForm />
+          ) : (
+            <div className="flex flex-col items-end space-y-2">
+              <h3 className="text-secondary-dark text-xl font-semibold">
+                log in to add commnet
+              </h3>
+              <GithubAuthButton />
+            </div>
+          )}
         </div>
       </div>
     </DefaultLayout>
@@ -55,5 +94,3 @@ const SinglePost = async ({ params }: { params: { slug: string } }) => {
 };
 
 export default SinglePost;
-
-SinglePost.revalidate = 60;

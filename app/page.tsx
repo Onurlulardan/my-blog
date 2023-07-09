@@ -6,7 +6,6 @@ import axios from "axios";
 import { PostDetails, UserProfile } from "@/utils/types";
 import useSWR from "swr";
 import InfinityScrollPosts from "@/components/common/infinitescrollpost";
-import { useSession } from "next-auth/react";
 import { filterPosts } from "@/utils/helper";
 import { useAuth } from "@/hooks/useAuth";
 

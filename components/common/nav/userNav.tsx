@@ -7,7 +7,7 @@ import { HiLightBulb } from "react-icons/hi";
 import { GithubAuthButton } from "@/components/button";
 import ProfileHead from "../profileHead";
 import DropdownOptions, { dropdownOptions } from "../DropdownOptions";
-import { useSession, signIn, signOut } from "next-auth/react";
+import { useSession, signOut } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { UserProfile } from "@/utils/types";
 import useDarkMode from "@/hooks/useDarkMode";
@@ -42,10 +42,6 @@ const UserNav: FC<Props> = (): JSX.Element => {
       ]
     : defaultOptions;
 
-  const handleLogin = async () => {
-    await signIn("github");
-  };
-
   const { toggleTheme } = useDarkMode();
 
   return (
@@ -68,7 +64,7 @@ const UserNav: FC<Props> = (): JSX.Element => {
             head={<ProfileHead NameInitial="O" lightOnly />}
           />
         ) : (
-          <GithubAuthButton onClick={handleLogin} lightOnly />
+          <GithubAuthButton lightOnly />
         )}
       </div>
     </div>
