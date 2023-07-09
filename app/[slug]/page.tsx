@@ -36,7 +36,10 @@ const SinglePost = async ({ params }: { params: { slug: string } }) => {
             <Image src={thumbnail.url} fill alt={title} />
           </div>
         ) : null}
-        <h1 className="text-6xl font-semibold text-primary-dark dark:text-primary py-2"> {title} </h1>
+        <h1 className="text-6xl font-semibold text-primary-dark dark:text-primary py-2">
+          {" "}
+          {title}{" "}
+        </h1>
         <div className="flex items-center justify-between py-2 text-secondary-dark dark:text-secondary-light">
           {tags.map((t, index) => (
             <span key={index}> {t} </span>
@@ -52,3 +55,5 @@ const SinglePost = async ({ params }: { params: { slug: string } }) => {
 };
 
 export default SinglePost;
+
+SinglePost.revalidate = 10;
