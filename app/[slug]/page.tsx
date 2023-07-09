@@ -10,6 +10,8 @@ import useSWR from "swr";
 import axios from "axios";
 import { NextPage } from "next";
 import { useEffect, useState } from "react";
+import NotFound from "../not-found";
+import Loading from "@/components/common/loading";
 
 interface finalProps {
   id: string;
@@ -51,8 +53,8 @@ const SinglePost: NextPage<Props> = ({ params }) => {
     }
   }, [data]);
 
-  if (error) return <div>Failed to load post</div>;
-  if (!data) return <div>Loading...</div>;
+  if (error) return <NotFound />;
+  if (!data) return <Loading />;
 
   return (
     <DefaultLayout title={post?.title} desc={post?.meta}>

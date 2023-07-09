@@ -6,6 +6,8 @@ import { useEffect, useState } from "react";
 import useSWR from "swr";
 import { generateFormData } from "@/utils/helper";
 import axios from "axios";
+import NotFound from "@/app/not-found";
+import Loading from "@/components/common/loading";
 
 interface UpdatedPost {
   id: string;
@@ -63,8 +65,8 @@ const Update: NextPage<Props> = ({ params }) => {
     }
   };
 
-  if (error) return <div>Failed to load post</div>;
-  if (!data) return <div>Loading...</div>;
+  if (error) return <NotFound />;
+  if (!data) return <Loading />;
 
   return (
     <AdminLayOut title="Update">

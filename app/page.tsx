@@ -8,6 +8,8 @@ import useSWR from "swr";
 import InfinityScrollPosts from "@/components/common/infinitescrollpost";
 import { filterPosts } from "@/utils/helper";
 import { useAuth } from "@/hooks/useAuth";
+import NotFound from "./not-found";
+import Loading from "@/components/common/loading";
 
 interface Props {}
 
@@ -54,8 +56,8 @@ const Home: NextPage = () => {
     }
   }, [pageNumber, post]);
 
-  if (error) return <div>Failed to load post</div>;
-  if (!data) return <div>Loading...</div>;
+  if (error) return <NotFound />;
+  if (!data) return <Loading />;
 
   return (
     <DefaultLayout>
