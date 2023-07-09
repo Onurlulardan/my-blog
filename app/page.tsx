@@ -17,7 +17,6 @@ const fetcher = async (url: string) => {
 };
 
 const Home: NextPage = () => {
-  const [hasMorePost, setHasMorePost] = useState(true);
   let pageNumber = 0;
   const limit = 9;
   const session = useSession();
@@ -30,6 +29,7 @@ const Home: NextPage = () => {
   );
 
   const [post, setPost] = useState<PostDetails[]>([]);
+  const [hasMorePost, setHasMorePost] = useState(post.length >= limit);
 
   useEffect(() => {
     if (data?.posts) {
