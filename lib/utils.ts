@@ -15,7 +15,7 @@ export const readPostFromDb = async (limit: number, pageNumber: number) => {
 
 export const formatPost = (posts: IPostModelSchema[]): PostDetails[] => {
   return posts.map((post) => ({
-    id: post._id.toString(),
+    _id: post._id.toString(),
     title: post.title,
     slug: post.slug,
     createdAt: post.createdAt.toString(),
