@@ -78,7 +78,7 @@ const SinglePost: NextPage<Props> = ({ params }) => {
 
         <div className="py-20">
           {profile ? (
-            <CommentForm />
+            <CommentForm title="Add Comment" />
           ) : (
             <div className="flex flex-col items-end space-y-2">
               <h3 className="text-secondary-dark text-xl font-semibold">
