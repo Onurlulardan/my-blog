@@ -26,7 +26,7 @@ const PostCard: FC<Props> = ({
   const imageUrl = typeof thumbnail === "string" ? thumbnail : thumbnail?.url;
 
   return (
-    <div className="rounded shadow-sm shadow-secondary-dark overflow-hidden  bg-primary dark:bg-primary-dark flex flex-col h-full">
+    <div className="rounded shadow-sm shadow-secondary-dark overflow-hidden  bg-primary dark:bg-primary-dark flex flex-col h-full min-w-[300px]">
       <div className="aspect-video relative">
         {!thumbnail ? (
           <div className="w-full h-full flex items-center justify-center text-secondary-dark opacity-50 font-semibold">
@@ -37,7 +37,7 @@ const PostCard: FC<Props> = ({
         )}
       </div>
 
-      <Link href={"/" + slug}>
+      <Link className="px-3" href={"/" + slug}>
         <div className="p-2 flex-1 flex flex-col ">
           <div className="flex items-center justify-between text-sm text-primary-dark dark:text-primary">
             <div className="flex items-center space-x-1">
